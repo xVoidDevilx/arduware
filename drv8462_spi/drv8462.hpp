@@ -3,128 +3,181 @@
 
 #include <SPI.h>
 
-// Stop crc command
-#define KILLCRC (0xf000407)
-// Device Config field masks
-#define CONV_AVG (0x07 << 12)
-#define MAG_TEMPCO (0x03 << 8)
-#define OP_MODE (0x07 << 4)
-#define T_CH_EN (0x01 << 3)
-#define T_RATE (0x01 << 2)
-#define T_HLT_EN (0x01 << 1)
-// SENSOR_CONF field masks
-#define ANGLE_EN (0x03 << 14)
-#define SLEEPTIME (0x0f << 10)
-#define MAG_CH_EN (0x0f << 6)
-#define Z_RANGE (0x03 << 4)
-#define Y_RANGE (0x03 << 2)
-#define X_RANGE (0x03)
-// System_Conf field masks
-#define DIAG_SEL (0x03 << 12)
-#define TRIGGER_MODE (0x03 << 9)
-#define DATA_TYPE (0x07 << 6)
-#define DIAG_EN (0x01 << 5)
-#define Z_HLT_EN (0x01 << 2)
-#define Y_HLT_EN (0x01 << 1)
-#define X_HLT_EN (0x01)
-// Alert_Conf field masks
-#define ALERT_LATCH (0x01 << 13)
-#define ALERT_MODE (0x01 << 12)
-#define STATUS_ALRT (0x01 << 11)
-#define RSLT_ALRT (0x01 << 8)
-#define THRX_COUNT (0x03 << 4)
-#define T_THRX_ALRT (0x01 << 3)
-#define Z_THRX_ALRT (0x01 << 2)
-#define Y_THRX_ALRT (0x01 << 1)
-#define X_THRX_ALRT (0x01)
-// X_THRX_CONF field masks
-#define X_HI_THRESHOLD (0xff << 8)
-#define X_LO_THRESHOLD (0xff)
-// Y_THRX_CONF field masks
-#define Y_HI_THRESHOLD (0xff << 8)
-#define Y_LO_THRESHOLD (0xff)
-// Z_THRX_CONF field masks
-#define Z_HI_THRESHOLD (0xff << 8)
-#define Z_LO_THRESHOLD (0xff)
-// T_THRX_CONF field masks
-#define T_HI_THRESHOLD (0xff << 8)
-#define T_LO_THRESHOLD (0xff)
-// CONV_STATUS field masks
-#define RDY (0x01 << 13)
-#define A (0x01 << 12)
-#define T (0x01 << 11)
-#define Z (0x01 << 10)
-#define Y (0x01 << 9)
-#define X (0x01 << 8)
-#define SET_COUNT (0x07 << 4)
-#define ALRT_STATUS (0x03)
-// AFE_STATUS field masks
-#define CFG_RESET (0x01 << 15)
-#define SENS_STAT (0x01 << 12)
-#define TEMP_STAT (0x01 << 11)
-#define ZHS_STAT (0x01 << 10)
-#define YHS_STAT (0x01 << 9)
-#define XHS_STAT (0x01 << 8)
-#define TRIM_STAT (0x01 << 1)
-#define LDO_STAT (0x01)
-// SYS_STATUS field masks
-#define ALRT_LVL (0x01 << 15)
-#define ALRT_DRV (0x01 << 14)
-#define SDO_DRV (0x01 << 13)
-#define CRC_STAT (0x01 << 12)
-#define FRAME_STAT (0x01 << 11)
-#define OPERATING_STAT (0x07 << 8)
-#define VCC_OV (0x01 << 5)
-#define VCC_UV (0x01 << 4)
-#define TEMP_THX (0x01 << 3)
-#define ZCH_THX (0x01 << 2)
-#define YCH_THX (0x01 << 1)
-#define XCH_THX (0x01)
-// TEST_CONFIG field Masks
-#define VER (0x03 << 4)
-#define CRC_DIS (0x01 << 2)
-#define OSC_CNT_CTL (0x03)
-// MAG_GAIN_CONFIG field masks
-#define GAIN_SELECTION (0x03 << 14)
-#define GAIN_VALUE (0x7FF)
-// MAG_OFFSET_CONFIG field masks
-#define OFFSET_SELECTION (0x03 << 14)
-#define OFFSET_VALUE_1 (0x7F << 7)
-#define OFFSET_VALUE_2 (0x7F)
+// Fault reg bit masks
+#define FAULT 7
+#define SPI_ERROR 6
+#define UVLO 5
+#define CPUV 4
+#define OCP 3
+#define STL 2
+#define TF 1
+#define OL 0
+// DIAG reg bitmasks
+#define OCP_LS2_B 7
+#define OCP_HS2_B 6
+#define OCP_LS1_B 5
+#define OCP_HS1_B 4
+#define OCP_LS2_A 3
+#define OCP_HS2_A 2
+#define OCP_LS1_A 1
+#define OCP_HS1_A 0
 
+#define STSL 7
+#define OTW 6
+#define OTS 5
+#define STL_LTN_OK 4
+#define STALL 3
+#define LRN_DONE 2
+#define OL_B 1
+#define OL_A 0
+
+#define NHOME 6
+#define CNT_OFLW 5
+#define CNT_UFLW 4
+#define NPOR 2
+
+// CTRL reg bit masks
+#define EN_OUT 7
+#define SR 6
+#define IDX_RST 5
+#define TOFF 3
+#define DECAY 0
+
+#define DIR 7
+#define STEP 6
+#define SPI_DIR 5
+#define SPI_STEP 4
+#define MICROSTEP_MODE 0
+
+#define CLR_FLT 7
+#define LOCK 4
+#define TOCP 3
+#define OCP_MODE 2
+#define OTSD_MODE 1
+#define OTW_REP 0
+
+#define TBLANK_TIME 6
+#define STL_LRN 5
+#define EN_STL 4
+#define STL_REP 3
+#define STL_FRQ 2
+#define STEP_FRQ_TOL 0
+
+#define RC_RIPPLE 6
+#define DIS_SSC 5
+#define TRQ_SCALE 4
+#define STALL_TH 0
+
+#define EN_OL 7
+#define OL_MODE 6
+#define OL_T 4
+#define STEP_EDGE 3
+#define RES_AUTO 1
+#define EN_AUTO 0
+
+#define EN_STSL 7
+#define TSTSL_FALL 3
+
+#define TSTSL_DLY 3
+#define VREF_INT_EN 2
+
+// INDEX REG BIT MASKS
+#define CUR_A_SIGN 7
+#define CUR_B_SIGN 7
+#define CUR_A 0
+
+// ATQ CTRL reg bit masks
+#define ATQ_CNT 5
+#define ATQ_LRN_CONST1 0
+
+#define ATQ_LRN_MIN_CURRENT 3
+#define ATQ_LRN_CONST2 0
+
+#define ATQ_EN 7
+#define LRN_START 6
+#define ATQ_FRZ 3
+#define ATQ_AVG 0
+#define KD 0
+
+#define ATQ_ERROR_TRUNCATE 4
+#define ATQ_LRN_STEP 2
+#define ATQ_LRN_CYCLE_SELECT 0
+
+#define VM_SCALE 6
+#define SS_SMPL_SEL 6
+#define SS_PWM_FREQ 2
+#define EN_SS 0
+
+#define SS_KI_DIV_SEL 4
+#define SS_KP_DIV_SEL 0
+
+#define VM_ADC 3
 class DRV8462
 {
 private:
     int csPin;
     // Define register addresses as static member variables
-    static const uint8_t DEVICE_CONFIG;
-    static const uint8_t SENSOR_CONFIG;
-    static const uint8_t SYSTEM_CONFIG;
-    static const uint8_t ALERT_CONFIG;
-    static const uint8_t X_THRX_CONFIG;
-    static const uint8_t Y_THRX_CONFIG;
-    static const uint8_t Z_THRX_CONFIG;
-    static const uint8_t T_THRX_CONFIG;
-    static const uint8_t CONV_STATUS;
-    static const uint8_t X_CH_RESULT;
-    static const uint8_t Y_CH_RESULT;
-    static const uint8_t Z_CH_RESULT;
-    static const uint8_t TEMP_RESULT;
-    static const uint8_t AFE_STATUS;
-    static const uint8_t SYS_STATUS;
-    static const uint8_t TEST_CONFIG;
-    static const uint8_t OSC_MONITOR;
-    static const uint8_t MAG_GAIN_CONFIG;
-    static const uint8_t MAG_OFFSET_CONFIG;
-    static const uint8_t ANGLE_RESULT;
-    static const uint8_t MAGNITUDE_RESULT;
+    static const uint8_t FAULT;
+    static const uint8_t DIAG1;
+    static const uint8_t DIAG2;
+    static const uint8_t DIAG3;
+    static const uint8_t CTRL1;
+    static const uint8_t CTRL2;
+    static const uint8_t CTRL3;
+    static const uint8_t CTRL4;
+    static const uint8_t CTRL5;
+    static const uint8_t CTRL6;
+    static const uint8_t CTRL7;
+    static const uint8_t CTRL8;
+    static const uint8_t CTRL9;
+    static const uint8_t CTRL10;
+    static const uint8_t CTRL11;
+    static const uint8_t CTRL12;
+    static const uint8_t CTRL13;
+    static const uint8_t INDEX1;
+    static const uint8_t INDEX2;
+    static const uint8_t INDEX3;
+    static const uint8_t INDEX4;
+    static const uint8_t INDEX5;
+    static const uint8_t CUSTOM_CTRL1;
+    static const uint8_t CUSTOM_CTRL2;
+    static const uint8_t CUSTOM_CTRL3;
+    static const uint8_t CUSTOM_CTRL4;
+    static const uint8_t CUSTOM_CTRL5;
+    static const uint8_t CUSTOM_CTRL6;
+    static const uint8_t CUSTOM_CTRL7;
+    static const uint8_t CUSTOM_CTRL8;
+    static const uint8_t CUSTOM_CTRL9;
+    static const uint8_t ATQ_CTRL1;
+    static const uint8_t ATQ_CTRL2;
+    static const uint8_t ATQ_CTRL3;
+    static const uint8_t ATQ_CTRL4;
+    static const uint8_t ATQ_CTRL5;
+    static const uint8_t ATQ_CTRL6;
+    static const uint8_t ATQ_CTRL7;
+    static const uint8_t ATQ_CTRL8;
+    static const uint8_t ATQ_CTRL9;
+    static const uint8_t ATQ_CTRL10;
+    static const uint8_t ATQ_CTRL11;
+    static const uint8_t ATQ_CTRL12;
+    static const uint8_t ATQ_CTRL13;
+    static const uint8_t ATQ_CTRL14;
+    static const uint8_t ATQ_CTRL15;
+    static const uint8_t ATQ_CTRL16;
+    static const uint8_t ATQ_CTRL17;
+    static const uint8_t ATQ_CTRL18;
+    static const uint8_t SS_CTRL1;
+    static const uint8_t SS_CTRL2;
+    static const uint8_t SS_CTRL3;
+    static const uint8_t SS_CTRL4;
+    static const uint8_t SS_CTRL5;
+    static const uint8_t CTRL14;
 
 public:
     DRV8462(int CSpin);
     void begin();
     uint16_t readFrame(uint8_t addr);
-    void writeFrame(uint8_t addr, uint16_t data);
-    uint8_t calculateCRC4(uint32_t source);
+    uint16_t writeFrame(uint8_t addr, uint8_t data);
 };
 
 #endif // DRV8462_HPP
