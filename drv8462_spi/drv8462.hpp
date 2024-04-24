@@ -178,6 +178,69 @@ public:
     void begin();
     uint16_t readFrame(uint8_t addr);
     uint16_t writeFrame(uint8_t addr, uint8_t data);
+
+    // Read - Only register methods
+    uint16_t readFault();
+    uint16_t readDiag1();
+    uint16_t readDiag2();
+    uint16_t readDiag3();
+
+    uint16_t readIndex1();
+    uint16_t readIndex2();
+    uint16_t readIndex3();
+    uint16_t readIndex4();
+    uint16_t readIndex5();
+    uint16_t readATQCTRL1();
+
+    // Read - Write register Methods
+    uint16_t writeCTRL1(uint8_t);
+    uint16_t writeCTRL2(uint8_t);
+    uint16_t writeCTRL3(uint8_t);
+    uint16_t writeCTRL4(uint8_t);
+    uint16_t writeCTRL5(uint8_t);
+    uint16_t writeCTRL6(uint8_t);
+    uint16_t writeCTRL7(uint8_t);
+    uint16_t writeCTRL8(uint8_t);
+    uint16_t writeCTRL9(uint8_t);
+    uint16_t writeCTRL10(uint8_t);
+    uint16_t writeCTRL11(uint8_t);
+    uint16_t writeCTRL12(uint8_t);
+    uint16_t writeCTRL13(uint8_t);
+    uint16_t writeCTRL14(uint8_t);
+
+    uint16_t writeCustomCTRL1(uint8_t);
+    uint16_t writeCustomCTRL2(uint8_t);
+    uint16_t writeCustomCTRL3(uint8_t);
+    uint16_t writeCustomCTRL4(uint8_t);
+    uint16_t writeCustomCTRL5(uint8_t);
+    uint16_t writeCustomCTRL6(uint8_t);
+    uint16_t writeCustomCTRL7(uint8_t);
+    uint16_t writeCustomCTRL8(uint8_t);
+    uint16_t writeCustomCTRL9(uint8_t);
+
+    uint16_t writeATQCTRL2(uint8_t);
+    uint16_t writeATQCTRL3(uint8_t);
+    uint16_t writeATQCTRL4(uint8_t);
+    uint16_t writeATQCTRL5(uint8_t);
+    uint16_t writeATQCTRL6(uint8_t);
+    uint16_t writeATQCTRL7(uint8_t);
+    uint16_t writeATQCTRL8(uint8_t);
+    uint16_t writeATQCTRL9(uint8_t);
+    uint16_t writeATQCTRL10(uint8_t);
+    uint16_t writeATQCTRL11(uint8_t);
+    uint16_t writeATQCTRL12(uint8_t);
+    uint16_t writeATQCTRL13(uint8_t);
+    uint16_t writeATQCTRL14(uint8_t);
+    uint16_t writeATQCTRL15(uint8_t);
+    uint16_t writeATQCTRL16(uint8_t);
+    uint16_t writeATQCTRL17(uint8_t);
+    uint16_t writeATQCTRL18(uint8_t);
+
+    uint16_t writeSSCTRL1(uint8_t);
+    uint16_t writeSSCTRL2(uint8_t);
+    uint16_t writeSSCTRL3(uint8_t);
+    uint16_t writeSSCTRL4(uint8_t);
+    uint16_t writeSSCTRL5(uint8_t);
 };
 
 #endif // DRV8462_HPP
