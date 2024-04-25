@@ -109,252 +109,417 @@ uint16_t DRV8462::writeFrame(uint8_t addr, uint8_t data)
     frame = (status << 8) | (report << 0);
 }
 
+// read method implementations
 uint16_t DRV8462::readFault()
 {
-    // Implementation goes here
-    return 0;
+    return readFrame(FAULT);
 }
 uint16_t DRV8462::readDiag1()
 {
-    // Implementation goes here
-    return 0;
+    return readFrame(DIAG1);
 }
 uint16_t DRV8462::readDiag2()
 {
-    // Implementation goes here
-    return 0;
+    return readFrame(DIAG2);
 }
 uint16_t DRV8462::readDiag3()
 {
-    // Implementation goes here
-    return 0;
+    return readFrame(DIAG3);
 }
 
 uint16_t DRV8462::readIndex1()
 {
-    // Implementation goes here
-    return 0;
+    return readFrame(INDEX1);
 }
 uint16_t DRV8462::readIndex2()
 {
-    // Implementation goes here
-    return 0;
+    return readFrame(INDEX2);
 }
 uint16_t DRV8462::readIndex3()
 {
-    // Implementation goes here
-    return 0;
+    return readFrame(INDEX3);
 }
 uint16_t DRV8462::readIndex4()
 {
-    // Implementation goes here
-    return 0;
+    return readFrame(INDEX4);
 }
 uint16_t DRV8462::readIndex5()
 {
-    // Implementation goes here
-    return 0;
+    return readFrame(INDEX5);
 }
 uint16_t DRV8462::readATQCTRL1()
 {
-    // Implementation goes here
-    return 0;
+    return readFrame(ATQ_CTRL1);
 }
 
+// write method implementations
 uint16_t DRV8462::writeCTRL1(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL1, data);
 }
 uint16_t DRV8462::writeCTRL2(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeframe(CTRL2, data);
 }
 uint16_t DRV8462::writeCTRL3(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL3, data);
 }
 uint16_t DRV8462::writeCTRL4(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL4, data);
 }
 uint16_t DRV8462::writeCTRL5(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL5, data);
 }
 uint16_t DRV8462::writeCTRL6(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL6, data);
 }
 uint16_t DRV8462::writeCTRL7(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL7, data);
 }
 uint16_t DRV8462::writeCTRL8(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL8, data);
 }
 uint16_t DRV8462::writeCTRL9(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL9, data);
 }
 uint16_t DRV8462::writeCTRL10(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL10, data);
 }
 uint16_t DRV8462::writeCTRL11(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL11, data);
 }
 uint16_t DRV8462::writeCTRL12(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL12, data);
 }
 uint16_t DRV8462::writeCTRL13(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL13, data);
 }
 uint16_t DRV8462::writeCTRL14(uint8_t data)
 {
-    // Implementation goes here
-    return 0;
+    return writeFrame(CTRL14, data);
 }
 
 uint16_t DRV8462::writeCustomCTRL1(uint8_t data)
 {
-    return 0;
+    return writeFrame(CUSTOM_CTRL1, data);
 }
 uint16_t DRV8462::writeCustomCTRL2(uint8_t data)
 {
-    return 0;
+    return writeFrame(CUSTOM_CTRL2, data);
 }
 uint16_t DRV8462::writeCustomCTRL3(uint8_t data)
 {
-    return 0;
+    return writeFrame(CUSTOM_CTRL3, data);
 }
 uint16_t DRV8462::writeCustomCTRL4(uint8_t data)
 {
-    return 0;
+    return writeFrame(CUSTOM_CTRL4, data);
 }
 uint16_t DRV8462::writeCustomCTRL5(uint8_t data)
 {
-    return 0;
+    return writeFrame(CUSTOM_CTRL5, data);
 }
 uint16_t DRV8462::writeCustomCTRL6(uint8_t data)
 {
-    return 0;
+    return writeFrame(CUSTOM_CTRL6, data);
 }
 uint16_t DRV8462::writeCustomCTRL7(uint8_t data)
 {
-    return 0;
+    return writeFrame(CUSTOM_CTRL7, data);
 }
 uint16_t DRV8462::writeCustomCTRL8(uint8_t data)
 {
-    return 0;
+    return writeFrame(CUSTOM_CTRL8, data);
 }
 uint16_t DRV8462::writeCustomCTRL9(uint8_t data)
 {
-    return 0;
+    return writeFrame(CUSTOM_CTRL9, data);
 }
 
 uint16_t DRV8462::writeATQCTRL2(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL2, data);
 }
 uint16_t DRV8462::writeATQCTRL3(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL3, data);
 }
 uint16_t DRV8462::writeATQCTRL4(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL4, data);
 }
 uint16_t DRV8462::writeATQCTRL5(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL5, data);
 }
 uint16_t DRV8462::writeATQCTRL6(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL6, data);
 }
 uint16_t DRV8462::writeATQCTRL7(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL7, data);
 }
 uint16_t DRV8462::writeATQCTRL8(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL8, data);
 }
 uint16_t DRV8462::writeATQCTRL9(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL9, data);
 }
 uint16_t DRV8462::writeATQCTRL10(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL10, data);
 }
 uint16_t DRV8462::writeATQCTRL11(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL11, data);
 }
 uint16_t DRV8462::writeATQCTRL12(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL12, data);
 }
 uint16_t DRV8462::writeATQCTRL13(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL13, data);
 }
 uint16_t DRV8462::writeATQCTRL14(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL14, data);
 }
 uint16_t DRV8462::writeATQCTRL15(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL15, data);
 }
 uint16_t DRV8462::writeATQCTRL16(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL16, data);
 }
 uint16_t DRV8462::writeATQCTRL17(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL17, data);
 }
 uint16_t DRV8462::writeATQCTRL18(uint8_t data)
 {
-    return 0;
+    return writeFrame(ATQ_CTRL18, data);
 }
 
 uint16_t DRV8462::writeSSCTRL1(uint8_t data)
 {
-    return 0;
+    return writeFrame(SS_CTRL1, data);
 }
 uint16_t DRV8462::writeSSCTRL2(uint8_t data)
 {
-    return 0;
+    return writeFrame(SS_CTRL2, data);
 }
 uint16_t DRV8462::writeSSCTRL3(uint8_t data)
 {
-    return 0;
+    return writeFrame(SS_CTRL3, data);
 }
 uint16_t DRV8462::writeSSCTRL4(uint8_t data)
 {
-    return 0;
+    return writeFrame(SS_CTRL4, data);
 }
 uint16_t DRV8462::writeSSCTRL5(uint8_t data)
 {
-    return 0;
+    return writeFrame(SS_CTRL5, data);
 }
+
+// read register variants of the RW registers
+uint16_t DRV8462::readCTRL1()
+{
+    return readFrame(CTRL1);
+}
+uint16_t DRV8462::readCTRL2()
+{
+    return readFrame(CTRL2);
+}
+uint16_t DRV8462::readCTRL3()
+{
+    return readFrame(CTRL3);
+}
+uint16_t DRV8462::readCTRL4()
+{
+    return readFrame(CTRL4);
+}
+uint16_t DRV8462::readCTRL5()
+{
+    return readFrame(CTRL5);
+}
+uint16_t DRV8462::readCTRL6()
+{
+    return readFrame(CTRL6);
+}
+uint16_t DRV8462::readCTRL7()
+{
+    return readFrame(CTRL7);
+}
+uint16_t DRV8462::readCTRL8()
+{
+    return readFrame(CTRL8);
+}
+uint16_t DRV8462::readCTRL9()
+{
+    return readFrame(CTRL9);
+}
+uint16_t DRV8462::readCTRL10()
+{
+    return readFrame(CTRL10);
+}
+uint16_t DRV8462::readCTRL11()
+{
+    return readFrame(CTRL11);
+}
+uint16_t DRV8462::readCTRL12()
+{
+    return readFrame(CTRL12);
+}
+uint16_t DRV8462::readCTRL13()
+{
+    return readFrame(CTRL13);
+}
+uint16_t DRV8462::readCTRL14()
+{
+    return readFrame(CTRL14);
+}
+
+uint16_t DRV8462::readCustomCTRL1()
+{
+    return readFrame(CUSTOM_CTRL1);
+}
+uint16_t DRV8462::readCustomCTRL2()
+{
+    return readFrame(CUSTOM_CTRL2);
+}
+uint16_t DRV8462::readCustomCTRL3()
+{
+    return readFrame(CUSTOM_CTRL3);
+}
+uint16_t DRV8462::readCustomCTRL4()
+{
+    return readFrame(CUSTOM_CTRL4);
+}
+uint16_t DRV8462::readCustomCTRL5()
+{
+    return readFrame(CUSTOM_CTRL5);
+}
+uint16_t DRV8462::readCustomCTRL6()
+{
+    return readFrame(CUSTOM_CTRL6);
+}
+uint16_t DRV8462::readCustomCTRL7()
+{
+    return readFrame(CUSTOM_CTRL7);
+}
+uint16_t DRV8462::readCustomCTRL8()
+{
+    return readFrame(CUSTOM_CTRL8);
+}
+uint16_t DRV8462::readCustomCTRL9()
+{
+    return readFrame(CUSTOM_CTRL9);
+}
+
+uint16_t DRV8462::readATQCTRL2()
+{
+    return readFrame(ATQ_CTRL2);
+}
+uint16_t DRV8462::readATQCTRL3()
+{
+    return readFrame(ATQ_CTRL3);
+}
+uint16_t DRV8462::readATQCTRL4()
+{
+    return readFrame(ATQ_CTRL4);
+}
+uint16_t DRV8462::readATQCTRL5()
+{
+    return readFrame(ATQ_CTRL5);
+}
+uint16_t DRV8462::readATQCTRL6()
+{
+    return readFrame(ATQ_CTRL6);
+}
+uint16_t DRV8462::readATQCTRL7()
+{
+    return readFrame(ATQ_CTRL7);
+}
+uint16_t DRV8462::readATQCTRL8()
+{
+    return readFrame(ATQ_CTRL8);
+}
+uint16_t DRV8462::readATQCTRL9()
+{
+    return readFrame(ATQ_CTRL9);
+}
+uint16_t DRV8462::readATQCTRL10()
+{
+    return readFrame(ATQ_CTRL10);
+}
+uint16_t DRV8462::readATQCTRL11()
+{
+    return readFrame(ATQ_CTRL11);
+}
+uint16_t DRV8462::readATQCTRL12()
+{
+    return readFrame(ATQ_CTRL12);
+}
+uint16_t DRV8462::readATQCTRL13()
+{
+    return readFrame(ATQ_CTRL13);
+}
+uint16_t DRV8462::readATQCTRL14()
+{
+    return readFrame(ATQ_CTRL14);
+}
+uint16_t DRV8462::readATQCTRL15()
+{
+    return readFrame(ATQ_CTRL15);
+}
+uint16_t DRV8462::readATQCTRL16()
+{
+    return readFrame(ATQ_CTRL16);
+}
+uint16_t DRV8462::readATQCTRL17()
+{
+    return readFrame(ATQ_CTRL17);
+}
+uint16_t DRV8462::readATQCTRL18()
+{
+    return readFrame(ATQ_CTRL18);
+}
+
+uint16_t DRV8462::readSSCTRL1()
+{
+    return readFrame(SS_CTRL1);
+}
+uint16_t DRV8462::readSSCTRL2()
+{
+    return readFrame(SS_CTRL2);
+}
+uint16_t DRV8462::readSSCTRL3()
+{
+    return readFrame(SS_CTRL3);
+}
+uint16_t DRV8462::readSSCTRL4()
+{
+    return readFrame(SS_CTRL4);
+}
+uint16_t DRV8462::readSSCTRL5()
+{
+    return readFrame(SS_CTRL5);
+}
+
+// High - Level API calls for device configurations

@@ -4,7 +4,7 @@
 #include <SPI.h>
 
 // Fault reg bit masks
-#define FAULT 7
+#define FAULTb 7
 #define SPI_ERROR 6
 #define UVLO 5
 #define CPUV 4
@@ -241,6 +241,56 @@ public:
     uint16_t writeSSCTRL3(uint8_t);
     uint16_t writeSSCTRL4(uint8_t);
     uint16_t writeSSCTRL5(uint8_t);
+
+    // Read variants of the RW registers
+    uint16_t readCTRL1();
+    uint16_t readCTRL2();
+    uint16_t readCTRL3();
+    uint16_t readCTRL4();
+    uint16_t readCTRL5();
+    uint16_t readCTRL6();
+    uint16_t readCTRL7();
+    uint16_t readCTRL8();
+    uint16_t readCTRL9();
+    uint16_t readCTRL10();
+    uint16_t readCTRL11();
+    uint16_t readCTRL12();
+    uint16_t readCTRL13();
+    uint16_t readCTRL14();
+
+    uint16_t readCustomCTRL1();
+    uint16_t readCustomCTRL2();
+    uint16_t readCustomCTRL3();
+    uint16_t readCustomCTRL4();
+    uint16_t readCustomCTRL5();
+    uint16_t readCustomCTRL6();
+    uint16_t readCustomCTRL7();
+    uint16_t readCustomCTRL8();
+    uint16_t readCustomCTRL9();
+
+    uint16_t readATQCTRL2();
+    uint16_t readATQCTRL3();
+    uint16_t readATQCTRL4();
+    uint16_t readATQCTRL5();
+    uint16_t readATQCTRL6();
+    uint16_t readATQCTRL7();
+    uint16_t readATQCTRL8();
+    uint16_t readATQCTRL9();
+    uint16_t readATQCTRL10();
+    uint16_t readATQCTRL11();
+    uint16_t readATQCTRL12();
+    uint16_t readATQCTRL13();
+    uint16_t readATQCTRL14();
+    uint16_t readATQCTRL15();
+    uint16_t readATQCTRL16();
+    uint16_t readATQCTRL17();
+    uint16_t readATQCTRL18();
+
+    uint16_t readSSCTRL1();
+    uint16_t readSSCTRL2();
+    uint16_t readSSCTRL3();
+    uint16_t readSSCTRL4();
+    uint16_t readSSCTRL5();
 };
 
 #endif // DRV8462_HPP
