@@ -205,10 +205,6 @@ uint16_t DRV8462::writeCTRL13(uint8_t data)
 {
     return writeFrame(CTRL13, data);
 }
-uint16_t DRV8462::writeCTRL14(uint8_t data)
-{
-    return writeFrame(CTRL14, data);
-}
 
 uint16_t DRV8462::writeCustomCTRL1(uint8_t data)
 {
@@ -523,3 +519,83 @@ uint16_t DRV8462::readSSCTRL5()
 }
 
 // High - Level API calls for device configurations
+void DRV8462::configAutoTorque(bool)
+{
+}
+void DRV8462::configOutputs(bool)
+{
+}
+void DRV8462::configDecay(uint8_t)
+{
+}
+void DRV8462::toggleDir()
+{
+}
+void DRV8462::change_uStep(uint8_t)
+{
+}
+void DRV8462::clearFaults()
+{
+}
+void DRV8462::toggleOCPMode()
+{
+}
+void DRV8462::toggleOTSDMode()
+{
+}
+void DRV8462::toggleSettingsLock()
+{
+
+} // must write 011 or 110
+
+void DRV8462::configStallLearn(bool)
+{
+}
+void DRV8462::configStallDetect(bool)
+{
+}
+void DRV8462::setStallThresh(uint16_t)
+{
+}
+void DRV8462::configOpenLoadDetect(bool)
+{
+}
+void DRV8462::config_uStepResolution(uint8_t)
+{
+}
+void DRV8462::configAuto_uStep(bool)
+{
+}
+void DRV8462::configHoldingCurrent(uint8_t)
+{
+}
+void DRV8462::configRunningCurrent(uint8_t)
+{
+}
+void DRV8462::toggleStandstillPowerMode()
+{
+}
+void DRV8462::toggleVreference()
+{
+}
+void DRV8462::configCustom_ustep(bool)
+{
+}
+void DRV8462::configAutoTorque(bool)
+{
+}
+void DRV8462::enableAutoTorqueLearning()
+{
+}
+void DRV8462::readMotorCurrent()
+{
+}
+void DRV8462::configSilentStep(bool)
+{
+}
+void DRV8462::setSilentDecayFreq(uint8_t)
+{
+}
+void DRV8462::setSilentStepFreq(uint8_t)
+{
+}

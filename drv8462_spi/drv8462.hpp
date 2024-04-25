@@ -206,7 +206,6 @@ public:
     uint16_t writeCTRL11(uint8_t);
     uint16_t writeCTRL12(uint8_t);
     uint16_t writeCTRL13(uint8_t);
-    uint16_t writeCTRL14(uint8_t);
 
     uint16_t writeCustomCTRL1(uint8_t);
     uint16_t writeCustomCTRL2(uint8_t);
@@ -291,6 +290,49 @@ public:
     uint16_t readSSCTRL3();
     uint16_t readSSCTRL4();
     uint16_t readSSCTRL5();
+
+    /*
+    High - Level API methods for Device Configurations
+    Remember to Call read, store the reg value, |= to new value to avoid
+    overwritten values
+    */
+    void configAutoTorque(bool);
+    void configOutputs(bool);
+    void configDecay(uint8_t);
+
+    void toggleDir();
+    void change_uStep(uint8_t);
+    void clearFaults();
+    void toggleOCPMode();
+    void toggleOTSDMode();
+    void toggleSettingsLock(); // must write 011 or 110
+
+    void configStallLearn(bool);
+    void configStallDetect(bool);
+
+    void setStallThresh(uint16_t);
+
+    void configOpenLoadDetect(bool);
+
+    void config_uStepResolution(uint8_t);
+    void configAuto_uStep(bool);
+
+    void configHoldingCurrent(uint8_t);
+    void configRunningCurrent(uint8_t);
+
+    void toggleStandstillPowerMode();
+    void toggleVreference();
+
+    void configCustom_ustep(bool);
+
+    void configAutoTorque(bool);
+    void enableAutoTorqueLearning();
+    void readMotorCurrent();
+
+    void configSilentStep(bool);
+    void setSilentDecayFreq(uint8_t);
+
+    void setSilentStepFreq(uint8_t);
 };
 
 #endif // DRV8462_HPP
