@@ -167,7 +167,7 @@ uint16_t DRV8462::writeCTRL1(uint8_t data)
 }
 uint16_t DRV8462::writeCTRL2(uint8_t data)
 {
-    return writeframe(CTRL2, data);
+    return writeFrame(CTRL2, data);
 }
 uint16_t DRV8462::writeCTRL3(uint8_t data)
 {

@@ -297,7 +297,6 @@ public:
     Remember to Call read, store the reg value, |= to new value to avoid
     overwritten values
     */
-    void configAutoTorque(bool);
     void configSPICtrl(bool enDIR, bool enSTEP, uint8_t uStepMode);
     void configOutputs(bool);
     void configDecay(uint8_t);
