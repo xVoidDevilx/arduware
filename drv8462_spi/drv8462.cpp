@@ -69,6 +69,14 @@ void DRV8462::begin()
     digitalWrite(csPin, HIGH);
 }
 
+void DRV8462::begin(bool EN_DIR, bool EN_STEP, uint8_t uStepMode)
+{
+    begin(); // Call the normal begin method to perform common initialization
+
+    // config for the SPI ctrl setup
+    configSPICtrl(EN_DIR, EN_STEP, uStepMode);
+}
+
 uint16_t DRV8462::readFrame(uint8_t addr)
 {
     /*
@@ -519,23 +527,39 @@ uint16_t DRV8462::readSSCTRL5()
 }
 
 // High - Level API calls for device configurations
-void DRV8462::configAutoTorque(bool)
+void DRV8462::configOutputs(bool en)
 {
-}
-void DRV8462::configOutputs(bool)
-{
+    uint16_t frame = readCTRL1();
+    uint8_t data = (uint8_t)frame & 0x00FF & (en << EN_OUT);
+    writeCTRL1(data);
 }
 void DRV8462::configDecay(uint8_t)
 {
 }
+void DRV8462::configSPICtrl(bool enDIR, bool enSTEP, uint8_t uStepMode)
+{
+    // configure the DRV for SPI controls
+    uint8_t command = (enDIR << SPI_DIR) | (enSTEP << SPI_STEP) | (uStepMode & 0xF);
+    writeCTRL2(command);
+}
 void DRV8462::toggleDir()
 {
+    // read current reg value
+    uint16_t frame = readCTRL2();
+    frame ^= (1 << DIR);                   // toggles the direction bit
+    writeCTRL2((uint8_t)(frame & 0x00FF)); // rewrite the data into control 2 with bit flipped
 }
-void DRV8462::change_uStep(uint8_t)
+void DRV8462::change_uStepMode(uint8_t uStepMode)
 {
+    uint16_t frame = readCTRL3();
+    uint8_t command = (uint8_t)frame & 0xFF & uStepMode;
+    writeCTRL3(command);
 }
 void DRV8462::clearFaults()
 {
+    uint16_t frame = readCTRL3();
+    uint8_t data = (uint8_t)frame & 0xFF & (1 << CLR_FLT);
+    writeCTRL3(data);
 }
 void DRV8462::toggleOCPMode()
 {
@@ -545,25 +569,37 @@ void DRV8462::toggleOTSDMode()
 }
 void DRV8462::toggleSettingsLock()
 {
+    uint16_t frame = readCTRL3();
+    uint8_t data = (uint8_t)(frame >> LOCK) & 0x7;
 
+    switch (data)
+    {
+    case 0b011:
+        data = (uint8_t)frame & 0xff | (0b110 < LOCK);
+        break;
+    case 0b110:
+        data = (uint8_t)frame & 0xff | (0b011 < LOCK);
+        break;
+    }
+    writeCTRL3(data); // lock the current settings
 } // must write 011 or 110
 
 void DRV8462::configStallLearn(bool)
 {
 }
-void DRV8462::configStallDetect(bool)
+void DRV8462::configStallDetect(bool x)
 {
 }
-void DRV8462::setStallThresh(uint16_t)
+void DRV8462::setStallThresh(uint16_t x)
 {
 }
-void DRV8462::configOpenLoadDetect(bool)
+void DRV8462::configOpenLoadDetect(bool x)
 {
 }
-void DRV8462::config_uStepResolution(uint8_t)
+void DRV8462::config_uStepResolution(uint8_t x)
 {
 }
-void DRV8462::configAuto_uStep(bool)
+void DRV8462::configAuto_uStep(bool x)
 {
 }
 void DRV8462::configHoldingCurrent(uint8_t)
@@ -578,14 +614,22 @@ void DRV8462::toggleStandstillPowerMode()
 void DRV8462::toggleVreference()
 {
 }
-void DRV8462::configCustom_ustep(bool)
+void DRV8462::configCustom_ustep(bool x)
 {
 }
-void DRV8462::configAutoTorque(bool)
+void DRV8462::configAutoTorque(bool en)
 {
+    // read current register value
+    uint16_t frame = readATQCTRL10();
+    uint8_t data = (uint8_t)frame & 0x00FF & (en << ATQ_EN); // clear|set the ATQ en bit, keep rest of reg contents
+    writeATQCTRL10(data);
 }
-void DRV8462::enableAutoTorqueLearning()
+void DRV8462::configAutoTorqueLearning(bool en)
 {
+    // read current register value
+    uint16_t frame = readATQCTRL10();
+    uint8_t data = (uint8_t)frame & 0x00FF & (en << LRN_START); // clear|set the ATQ en bit, keep rest of reg contents
+    writeATQCTRL10(data);
 }
 void DRV8462::readMotorCurrent()
 {

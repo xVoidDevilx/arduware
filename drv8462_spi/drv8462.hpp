@@ -176,6 +176,7 @@ private:
 public:
     DRV8462(int CSpin);
     void begin();
+    void begin(bool EN_DIR, bool EN_STEP, uint8_t uStepMode);
     uint16_t readFrame(uint8_t addr);
     uint16_t writeFrame(uint8_t addr, uint8_t data);
 
@@ -297,11 +298,12 @@ public:
     overwritten values
     */
     void configAutoTorque(bool);
+    void configSPICtrl(bool enDIR, bool enSTEP, uint8_t uStepMode);
     void configOutputs(bool);
     void configDecay(uint8_t);
 
     void toggleDir();
-    void change_uStep(uint8_t);
+    void change_uStepMode(uint8_t);
     void clearFaults();
     void toggleOCPMode();
     void toggleOTSDMode();
@@ -326,7 +328,7 @@ public:
     void configCustom_ustep(bool);
 
     void configAutoTorque(bool);
-    void enableAutoTorqueLearning();
+    void configAutoTorqueLearning(bool);
     void readMotorCurrent();
 
     void configSilentStep(bool);
