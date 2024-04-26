@@ -68,7 +68,13 @@ void DRV8462::begin()
     // Initialize CS pin to HIGH (inactive)
     digitalWrite(csPin, HIGH);
 }
+void DRV8462::begin(bool EN_DIR, bool EN_STEP)
+{
+    begin(); // Call the normal begin method to perform common initialization
 
+    // config for the SPI ctrl setup
+    configSPICtrl(EN_DIR, EN_STEP, 0b110);
+}
 void DRV8462::begin(bool EN_DIR, bool EN_STEP, uint8_t uStepMode)
 {
     begin(); // Call the normal begin method to perform common initialization
@@ -86,18 +92,17 @@ uint16_t DRV8462::readFrame(uint8_t addr)
     uint16_t frame = 0;
     // Start SPI communication
     digitalWrite(csPin, LOW);
-    // Send register address with MSB set to 1 for read operation
-    uint8_t status = SPI.transfer(addr & 0x7F); // 7F => 0111 1111 0 first, RW=1, then addr
+    SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE1)); // Adjust clock speed and mode according to your device    // Send register address with MSB set to 1 for read operation
+    uint8_t status = SPI.transfer(addr & 0x7F);                      // 7F => 0111 1111 0 first, RW=1, then addr
     // Receive data from the register
     uint8_t report = SPI.transfer(0x00);
     // End SPI communication
+    SPI.endTransaction();
     digitalWrite(csPin, HIGH);
-
     // format the frame to be returned
     frame = (status << 8) | (report << 0);
     return frame;
 }
-
 uint16_t DRV8462::writeFrame(uint8_t addr, uint8_t data)
 {
     /*
@@ -108,16 +113,20 @@ uint16_t DRV8462::writeFrame(uint8_t addr, uint8_t data)
     uint8_t status = 0, report = 0;
     // Start SPI communication
     digitalWrite(csPin, LOW);
+    SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE1)); // Adjust clock speed and mode according to your device    // Send register address with MSB set to 1 for read operation
+
     // Send register address with MSB set to 0 for write operation
     status = SPI.transfer(addr & 0x3F); // 3F => 0011 1111 : 0 first, RW = 0, then addr
     // Send data to write to the register
     report = SPI.transfer(data);
     // End SPI communication
+    SPI.endTransaction();
     digitalWrite(csPin, HIGH);
     frame = (status << 8) | (report << 0);
+    return frame;
 }
 
-// read method implementations
+/* read method implementations */
 uint16_t DRV8462::readFault()
 {
     return readFrame(FAULT);
@@ -160,7 +169,8 @@ uint16_t DRV8462::readATQCTRL1()
     return readFrame(ATQ_CTRL1);
 }
 
-// write method implementations
+/* Write Method Implementations */
+
 uint16_t DRV8462::writeCTRL1(uint8_t data)
 {
     return writeFrame(CTRL1, data);
@@ -526,12 +536,12 @@ uint16_t DRV8462::readSSCTRL5()
     return readFrame(SS_CTRL5);
 }
 
-// High - Level API calls for device configurations
 void DRV8462::configOutputs(bool en)
 {
+    // Done
     uint16_t frame = readCTRL1();
-    uint8_t data = (uint8_t)frame & 0x00FF & (en << EN_OUT);
-    writeCTRL1(data);
+    frame = (frame & 0x7F) | (en << EN_OUT);
+    writeCTRL1((uint8_t)frame);
 }
 void DRV8462::configDecay(uint8_t)
 {
@@ -546,17 +556,19 @@ void DRV8462::toggleDir()
 {
     // read current reg value
     uint16_t frame = readCTRL2();
-    frame ^= (1 << DIR);                   // toggles the direction bit
-    writeCTRL2((uint8_t)(frame & 0x00FF)); // rewrite the data into control 2 with bit flipped
+    frame ^= (1 << DIR);                 // toggles the direction bit
+    writeCTRL2((uint8_t)(frame & 0xFF)); // rewrite the data into control 2 with bit flipped
 }
 void DRV8462::change_uStepMode(uint8_t uStepMode)
 {
+    // Done
     uint16_t frame = readCTRL3();
     uint8_t command = (uint8_t)frame & 0xFF & uStepMode;
     writeCTRL3(command);
 }
 void DRV8462::clearFaults()
 {
+    // Done
     uint16_t frame = readCTRL3();
     uint8_t data = (uint8_t)frame & 0xFF & (1 << CLR_FLT);
     writeCTRL3(data);
@@ -621,14 +633,14 @@ void DRV8462::configAutoTorque(bool en)
 {
     // read current register value
     uint16_t frame = readATQCTRL10();
-    uint8_t data = (uint8_t)frame & 0x00FF & (en << ATQ_EN); // clear|set the ATQ en bit, keep rest of reg contents
+    uint8_t data = (uint8_t)frame & 0xFF & (en << ATQ_EN); // clear|set the ATQ en bit, keep rest of reg contents
     writeATQCTRL10(data);
 }
 void DRV8462::configAutoTorqueLearning(bool en)
 {
     // read current register value
     uint16_t frame = readATQCTRL10();
-    uint8_t data = (uint8_t)frame & 0x00FF & (en << LRN_START); // clear|set the ATQ en bit, keep rest of reg contents
+    uint8_t data = (uint8_t)frame & 0xFF & (en << LRN_START); // clear|set the ATQ en bit, keep rest of reg contents
     writeATQCTRL10(data);
 }
 void DRV8462::readMotorCurrent()

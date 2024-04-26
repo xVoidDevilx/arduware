@@ -176,9 +176,10 @@ private:
 public:
     DRV8462(int CSpin);
     void begin();
-    void begin(bool EN_DIR, bool EN_STEP, uint8_t uStepMode);
-    uint16_t readFrame(uint8_t addr);
-    uint16_t writeFrame(uint8_t addr, uint8_t data);
+    void begin(bool, bool);
+    void begin(bool, bool, uint8_t);
+    uint16_t readFrame(uint8_t);
+    uint16_t writeFrame(uint8_t, uint8_t);
 
     // Read - Only register methods
     uint16_t readFault();
