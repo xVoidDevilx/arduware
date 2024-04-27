@@ -57,30 +57,20 @@ const uint8_t DRV8462::SS_CTRL4 = 0x34;
 const uint8_t DRV8462::SS_CTRL5 = 0x35;
 const uint8_t DRV8462::CTRL14 = 0x3C;
 
-DRV8462::DRV8462(int CSpin) : csPin(CSpin) {}
-
+DRV8462::DRV8462(int CSpin, int sleepPin) : csPin(CSpin), slpPin(sleepPin)
+{
+    // Other initialization code if needed
+}
 void DRV8462::begin()
 {
-    // Initialize SPI communication
-    SPI.begin();
     // Set CS pin as OUTPUT
     pinMode(csPin, OUTPUT);
+    // Set slp pin as OUTPUT
+    pinMode(slpPin, OUTPUT);
+
     // Initialize CS pin to HIGH (inactive)
     digitalWrite(csPin, HIGH);
-}
-void DRV8462::begin(bool EN_DIR, bool EN_STEP)
-{
-    begin(); // Call the normal begin method to perform common initialization
-
-    // config for the SPI ctrl setup
-    configSPICtrl(EN_DIR, EN_STEP, 0b110);
-}
-void DRV8462::begin(bool EN_DIR, bool EN_STEP, uint8_t uStepMode)
-{
-    begin(); // Call the normal begin method to perform common initialization
-
-    // config for the SPI ctrl setup
-    configSPICtrl(EN_DIR, EN_STEP, uStepMode);
+    digitalWrite(slpPin, LOW);
 }
 
 uint16_t DRV8462::readFrame(uint8_t addr)
@@ -93,12 +83,13 @@ uint16_t DRV8462::readFrame(uint8_t addr)
     // Start SPI communication
     digitalWrite(csPin, LOW);
     SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE1)); // Adjust clock speed and mode according to your device    // Send register address with MSB set to 1 for read operation
-    uint8_t status = SPI.transfer(addr & 0x7F);                      // 7F => 0111 1111 0 first, RW=1, then addr
+    uint8_t status = SPI.transfer((addr & 0x3F) | (1 << RW));        // 7F => 0111 1111 0 first, RW=1, then addr
     // Receive data from the register
     uint8_t report = SPI.transfer(0x00);
     // End SPI communication
     SPI.endTransaction();
     digitalWrite(csPin, HIGH);
+    delayMicroseconds(1);
     // format the frame to be returned
     frame = (status << 8) | (report << 0);
     return frame;
@@ -122,6 +113,7 @@ uint16_t DRV8462::writeFrame(uint8_t addr, uint8_t data)
     // End SPI communication
     SPI.endTransaction();
     digitalWrite(csPin, HIGH);
+    delayMicroseconds(1);
     frame = (status << 8) | (report << 0);
     return frame;
 }
@@ -536,6 +528,23 @@ uint16_t DRV8462::readSSCTRL5()
     return readFrame(SS_CTRL5);
 }
 
+/* API Methods */
+void DRV8462::Step()
+{
+    // Get the data currently in the register
+    uint16_t frame = readCTRL2();
+    frame |= (1 << STEP);
+    frame &= 0xFF;
+    writeCTRL2((uint8_t)frame);
+}
+void DRV8462::wake()
+{
+    digitalWrite(slpPin, HIGH);
+}
+void DRV8462::sleep()
+{
+    digitalWrite(slpPin, LOW);
+}
 void DRV8462::configOutputs(bool en)
 {
     // Done
@@ -546,11 +555,25 @@ void DRV8462::configOutputs(bool en)
 void DRV8462::configDecay(uint8_t)
 {
 }
+void DRV8462::setStepEdge()
+{
+    uint16_t frame = readCTRL9();
+    frame &= 0xff;
+    frame |= (1 << STEP_EDGE);
+    writeCTRL9((uint8_t)frame);
+}
 void DRV8462::configSPICtrl(bool enDIR, bool enSTEP, uint8_t uStepMode)
 {
     // configure the DRV for SPI controls
-    uint8_t command = (enDIR << SPI_DIR) | (enSTEP << SPI_STEP) | (uStepMode & 0xF);
+    uint8_t command = (enDIR << SPI_DIR) | (enSTEP << SPI_STEP) | (uStepMode & 0xf);
     writeCTRL2(command);
+}
+void DRV8462::enAuto_ustep(bool en)
+{
+    uint16_t frame = readCTRL9();
+    frame &= 0x7f;
+    frame |= en << EN_AUTO;
+    writeCTRL9((uint8_t)frame);
 }
 void DRV8462::toggleDir()
 {
@@ -570,14 +593,22 @@ void DRV8462::clearFaults()
 {
     // Done
     uint16_t frame = readCTRL3();
-    uint8_t data = (uint8_t)frame & 0xFF & (1 << CLR_FLT);
-    writeCTRL3(data);
+    frame |= (1 << CLR_FLT);
+    writeCTRL3((uint8_t)frame & 0xff);
 }
 void DRV8462::toggleOCPMode()
 {
+    // Done
+    uint16_t frame = readCTRL3();
+    frame ^= (1 << OCP_MODE);
+    writeCTRL3((uint8_t)frame & 0xff);
 }
 void DRV8462::toggleOTSDMode()
 {
+    // Done
+    uint16_t frame = readCTRL3();
+    frame ^= (1 << OTSD_MODE);
+    writeCTRL3((uint8_t)frame & 0xff);
 }
 void DRV8462::toggleSettingsLock()
 {
@@ -608,24 +639,32 @@ void DRV8462::setStallThresh(uint16_t x)
 void DRV8462::configOpenLoadDetect(bool x)
 {
 }
-void DRV8462::config_uStepResolution(uint8_t x)
+void DRV8462::config_uStepResolution(uint8_t res)
 {
+    uint16_t frame = readCTRL9();
+    uint8_t data = (res & 0x3) << RES_AUTO;
+    data |= (uint8_t)frame & 0b11111001;
+    writeCTRL9(data);
 }
-void DRV8462::configAuto_uStep(bool x)
+void DRV8462::configAuto_uStep(bool en)
 {
+    uint16_t frame = readCTRL9();
+    frame &= 0xFE;
+    frame |= (en << EN_AUTO);
+    writeCTRL9((uint8_t)frame);
 }
-void DRV8462::configHoldingCurrent(uint8_t)
+void DRV8462::configHoldingCurrent(uint8_t limit)
 {
+    writeCTRL10(limit);
 }
-void DRV8462::configRunningCurrent(uint8_t)
+void DRV8462::configRunningCurrent(uint8_t limit)
 {
+    writeCTRL11(limit);
 }
 void DRV8462::toggleStandstillPowerMode()
 {
 }
-void DRV8462::toggleVreference()
-{
-}
+
 void DRV8462::configCustom_ustep(bool x)
 {
 }
@@ -633,7 +672,14 @@ void DRV8462::configAutoTorque(bool en)
 {
     // read current register value
     uint16_t frame = readATQCTRL10();
-    uint8_t data = (uint8_t)frame & 0xFF & (en << ATQ_EN); // clear|set the ATQ en bit, keep rest of reg contents
+    uint8_t data = (uint8_t)frame & 0xFF | (en << ATQ_EN); // clear|set the ATQ en bit, keep rest of reg contents
+    writeATQCTRL10(data);
+}
+void DRV8462::startATQLearning()
+{
+    // read current register value
+    uint16_t frame = readATQCTRL10();
+    uint8_t data = (uint8_t)frame & 0xFF | (1 << LRN_START); // clear|set the ATQ en bit, keep rest of reg contents
     writeATQCTRL10(data);
 }
 void DRV8462::configAutoTorqueLearning(bool en)
@@ -654,4 +700,11 @@ void DRV8462::setSilentDecayFreq(uint8_t)
 }
 void DRV8462::setSilentStepFreq(uint8_t)
 {
+}
+void DRV8462::useInternalVCC(bool en)
+{
+    uint16_t frame = readCTRL13();
+    frame &= 0b11111101;          // write back same contents
+    frame |= (en << VREF_INT_EN); // Set the vref pin
+    writeCTRL13((uint8_t)frame & 0xFF);
 }

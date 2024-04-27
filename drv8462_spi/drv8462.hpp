@@ -4,6 +4,7 @@
 #include <SPI.h>
 
 // Fault reg bit masks
+#define RW 6
 #define FAULTb 7
 #define SPI_ERROR 6
 #define UVLO 5
@@ -78,8 +79,8 @@
 #define EN_STSL 7
 #define TSTSL_FALL 3
 
-#define TSTSL_DLY 3
-#define VREF_INT_EN 2
+#define TSTSL_DLY 2
+#define VREF_INT_EN 1
 
 // INDEX REG BIT MASKS
 #define CUR_A_SIGN 7
@@ -116,6 +117,7 @@ class DRV8462
 {
 private:
     int csPin;
+    int slpPin;
     // Define register addresses as static member variables
     static const uint8_t FAULT;
     static const uint8_t DIAG1;
@@ -174,10 +176,8 @@ private:
     static const uint8_t CTRL14;
 
 public:
-    DRV8462(int CSpin);
+    DRV8462(int, int);
     void begin();
-    void begin(bool, bool);
-    void begin(bool, bool, uint8_t);
     uint16_t readFrame(uint8_t);
     uint16_t writeFrame(uint8_t, uint8_t);
 
@@ -298,11 +298,16 @@ public:
     Remember to Call read, store the reg value, |= to new value to avoid
     overwritten values
     */
-    void configSPICtrl(bool enDIR, bool enSTEP, uint8_t uStepMode);
+    void Step();
+    void wake();
+    void sleep();
+    void configSPICtrl(bool, bool, uint8_t);
     void configOutputs(bool);
     void configDecay(uint8_t);
 
+    void enAuto_ustep(bool);
     void toggleDir();
+    void setStepEdge();
     void change_uStepMode(uint8_t);
     void clearFaults();
     void toggleOCPMode();
@@ -323,18 +328,19 @@ public:
     void configRunningCurrent(uint8_t);
 
     void toggleStandstillPowerMode();
-    void toggleVreference();
 
     void configCustom_ustep(bool);
 
     void configAutoTorque(bool);
     void configAutoTorqueLearning(bool);
     void readMotorCurrent();
+    void startATQLearning();
 
     void configSilentStep(bool);
     void setSilentDecayFreq(uint8_t);
 
     void setSilentStepFreq(uint8_t);
+    void useInternalVCC(bool);
 };
 
 #endif // DRV8462_HPP
